@@ -114,150 +114,149 @@ button {
 <div id="collectedGifts"></div>
 
 <script>
-const noBtn = document.getElementById("noBtn");
 const card = document.getElementById("card");
-const giftBtnContainer = document.getElementById("giftBtnContainer");
 const giftBtn = document.getElementById("giftBtn");
+const giftBtnContainer = document.getElementById("giftBtnContainer");
 const collectedGifts = document.getElementById("collectedGifts");
-
-// stubborn No button movement
-function moveNo() {
-  const cardRect = card.getBoundingClientRect();
-  const maxX = cardRect.width - noBtn.offsetWidth;
-  const maxY = cardRect.height - noBtn.offsetHeight;
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
-}
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", moveNo, { passive:false });
-
-// story flow definition
-const storySteps = [
-  // 1–4 gifts
-  { before:'CLICK THE "🎁"', after:"Here's my first gift. A virtual bouquet because you're too far away 💐", gift:true, img:"images/gift1.png" },
-  { before:'CLICK THE "🎁"', after:"Second gift: FRIES 🍟 because I know you love them (I do too)", gift:true, img:"images/gift22.png" },
-  { before:'CLICK THE "🎁"', after:"Third gift 💖", gift:true, img:"images/gift3.png" },
-  { before:'CLICK THE "🎁"', after:"HERE'S MY FOURTH GIFT 🎄", gift:true, img:"images/gift4.png" },
-
-  // page 5 – normal page
-  { before:"I just want you to know that all of these came from my heart.", gift:false },
-
-  // page 6 – bring back Yes/No
-  { before:"So… did you like my gifts?", gift:false, ask:true }
-];
 
 let step = 0;
 let giftClicked = false;
+let noClicks = 0;
 
-// initial Yes button
-function yesClicked() {
-  showStep();
+/* ---------- STUBBORN NO ---------- */
+function moveNo(e){
+  e?.preventDefault();
+  const noBtn = document.getElementById("noBtn");
+  if(!noBtn) return;
+
+  const rect = card.getBoundingClientRect();
+  noBtn.style.position = "absolute";
+  noBtn.style.left = Math.random() * (rect.width - noBtn.offsetWidth) + "px";
+  noBtn.style.top  = Math.random() * (rect.height - noBtn.offsetHeight) + "px";
 }
 
-function showStep() {
+function attachNoBehavior(){
+  const noBtn = document.getElementById("noBtn");
+  if(!noBtn) return;
+
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("touchstart", moveNo, { passive:false });
+
+  noBtn.addEventListener("click", () => {
+    noClicks++;
+
+    const texts = [
+      "are you sure?",
+      "are you really sure?",
+      "are you really really sure?",
+      "ARE YOU REALLY REALLY SURE?",
+      "last chance…"
+    ];
+
+    if(noClicks <= 5){
+      card.querySelector("p").innerText = texts[noClicks-1];
+    } else {
+      showNoFinal();
+    }
+  });
+}
+
+/* ---------- STORY ---------- */
+const storySteps = [
+  { gift:true, img:"images/gift1.png", after:"Here's my first gift💐💐💐. A virtual baby's breath bouquet because you're too far away and I couldn't give it to you in person. I hope you like it :))" },
+  { gift:true, img:"images/gift22.png", after:"For my second gift, FRIESSS. Yeppp, I know how much u love fries and I do too, instead of eating it myself I'll just give it to you. Even though I also love fries, I love you more💖💖💖" },
+  { gift:true, img:"images/gift3.png", after:"Third gift 💝" },
+  { gift:true, img:"images/gift4.png", after:"Fourth gift 🎁" },
+  { text:"This page stays for now." },
+  { choice:true }
+];
+
+function yesClicked(){
+  showNext();
+}
+
+function showNext(){
   giftClicked = false;
   giftBtnContainer.style.display = "none";
 
-  const s = storySteps[step];
+  if(step >= storySteps.length) return;
 
-  // final page
-  if (!s) {
-    card.innerHTML = `
-      <h1>💖</h1>
-      <p>Thank you for being you.  
-      Merry Christmas 🎄🎁</p>
-    `;
-    return;
-  }
-
-  // page with Yes/No again
-  if (s.ask) {
-    card.innerHTML = `
-      <p>${s.before}</p>
-      <div class="buttons">
-        <button class="yes" onclick="finalYes()">Yes</button>
-        <button class="no" id="noBtn">No</button>
-      </div>
-    `;
-    document.getElementById("noBtn").addEventListener("mouseenter", moveNo);
-    step++;
-    return;
-  }
-
-  // normal page
-  card.innerHTML = `<p>${s.before}</p>`;
-
-  if (s.gift) {
-    giftBtnContainer.style.display = "block";
-  } else {
-    card.innerHTML += `<button class="next" onclick="nextStep()">Next</button>`;
-  }
-
+  const cur = storySteps[step];
   step++;
+
+  if(cur.gift){
+    card.innerHTML = `<p>CLICK THE "🎁"</p>`;
+    giftBtnContainer.style.display = "block";
+    giftBtn.dataset.img = cur.img;
+    giftBtn.dataset.after = cur.after;
+  }
+  else if(cur.choice){
+    noClicks = 0;
+    card.innerHTML = `
+      <p>One last question…</p>
+      <div class="buttons">
+        <button class="yes" onclick="showYesFinal()">Yes</button>
+        <button class="no" id="noBtn">No</button>
+      </div>`;
+    setTimeout(attachNoBehavior,50);
+  }
+  else{
+    card.innerHTML = `<p>${cur.text}</p><button class="next" onclick="showNext()">Next</button>`;
+  }
 }
 
-function nextStep() {
-  showStep();
-}
-
-function finalYes() {
-  card.innerHTML = `
-    <h1>🎄💖</h1>
-    <p>I’m really happy you stayed until the end.  
-    You mean a lot to me.</p>
-  `;
-}
-
-// gift animation
-giftBtn.addEventListener("click", () => {
-  if (giftClicked) return;
+/* ---------- GIFT ANIMATION ---------- */
+giftBtn.addEventListener("click",()=>{
+  if(giftClicked) return;
   giftClicked = true;
 
-  const s = storySteps[step - 1];
   const img = document.createElement("img");
-  img.src = s.img;
+  img.src = giftBtn.dataset.img;
   img.className = "collectedGift";
 
-  const btnRect = giftBtn.getBoundingClientRect();
-  img.style.left = btnRect.left + "px";
-  img.style.top = btnRect.top + "px";
+  const rect = giftBtn.getBoundingClientRect();
+  img.style.left = rect.left+"px";
+  img.style.top  = rect.top+"px";
 
   document.body.appendChild(img);
 
-  // grow to center (2x)
-  setTimeout(() => {
-    img.style.width = "240px";
-    img.style.height = "240px";
-    img.style.left = window.innerWidth / 2 - 120 + "px";
-    img.style.top = window.innerHeight / 2 - 120 + "px";
-  }, 50);
+  setTimeout(()=>{
+    img.style.width="240px";
+    img.style.height="240px";
+    img.style.left=innerWidth/2-120+"px";
+    img.style.top=innerHeight/2-120+"px";
+  },50);
 
-  // shrink to collection
-  setTimeout(() => {
-    img.style.width = "70px";
-    img.style.height = "70px";
-    const count = collectedGifts.children.length;
-    img.style.left = 20 + count * 80 + "px";
-    img.style.top = "20px";
-  }, 3000);
+  setTimeout(()=>{
+    img.style.width="70px";
+    img.style.height="70px";
+    img.style.left=20+collectedGifts.children.length*80+"px";
+    img.style.top="20px";
+  },3000);
 
-  // lock into collection + show next button
-  setTimeout(() => {
+  setTimeout(()=>{
     collectedGifts.appendChild(img);
-    img.style.position = "static";
-
-    card.innerHTML = `
-      <p>${s.after}</p>
-      <button class="next" onclick="nextStep()">Next</button>
-    `;
-  }, 4000);
+    img.style.position="static";
+    card.innerHTML = `<p>${giftBtn.dataset.after}</p>
+                      <button class="next" onclick="showNext()">Next</button>`;
+  },4000);
 });
+
+/* ---------- FINALS ---------- */
+function showYesFinal(){
+  card.innerHTML = `<h1>💖</h1><p>You chose yes. And that makes me really happy.</p>`;
+}
+
+function showNoFinal(){
+  card.innerHTML = `<h1>🥲</h1><p>You said no… but I still wanted you to see this.</p>`;
+}
+
+/* initial stubborn no */
+attachNoBehavior();
 </script>
 
 </body>
 </html>
-
-
 
 
 
