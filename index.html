@@ -4,38 +4,127 @@
   <meta charset="UTF-8">
   <title>Hey</title>
 
+  <!-- Google Fonts (safe & common) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
-      background: #ffe6eb;
-      font-family: Arial, sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffe6eb, #fff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
     }
 
     .card {
       background: white;
-      margin: 100px auto;
-      padding: 40px;
-      border-radius: 20px;
-      width: 80%;
-      max-width: 400px;
+      padding: 45px 50px;
+      border-radius: 22px;
       text-align: center;
+      max-width: 420px;
+      width: 85%;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      animation: fadeUp 1.2s ease;
     }
 
     h1 {
+      font-family: 'Playfair Display', serif;
       color: #ff4d6d;
+      margin-bottom: 15px;
+      font-size: 38px;
     }
 
     p {
       font-size: 18px;
       color: #555;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    .yes {
+      background-color: #ff4d6d;
+      color: white;
+    }
+
+    .no {
+      background-color: #e0e0e0;
+      color: #555;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
+
+  <div class="card" id="card">
     <h1>Hey</h1>
-    <p>I’ve been meaning to tell you something.</p>
+    <p>
+      I’ve been meaning to tell you something for a while now.
+      <br><br>
+      I like you.
+    </p>
+
+    <div class="buttons">
+      <button class="yes" onclick="yesClicked()">Yes</button>
+      <button class="no" onclick="noClicked()">No</button>
+    </div>
   </div>
+
+  <script>
+    function yesClicked() {
+      document.getElementById("card").innerHTML = `
+        <h1>💗</h1>
+        <p>
+          You have no idea how happy this makes me.
+          <br><br>
+          Thank you for saying yes.
+        </p>
+      `;
+    }
+
+    function noClicked() {
+      document.getElementById("card").innerHTML = `
+        <h1>It’s okay</h1>
+        <p>
+          Thank you for being honest.
+          <br>
+          I’m still really glad you saw this.
+        </p>
+      `;
+    }
+  </script>
+
 </body>
 </html>
