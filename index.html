@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>Hey</title>
 
-  <!-- Google Fonts (safe & common) -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+  <!-- Mobile optimization -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
@@ -15,52 +15,52 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Poppins', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     .card {
       background: white;
-      padding: 45px 50px;
-      border-radius: 22px;
+      padding: 30px 25px;
+      border-radius: 20px;
       text-align: center;
-      max-width: 420px;
-      width: 85%;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-      animation: fadeUp 1.2s ease;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+      animation: fadeUp 0.8s ease;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
       color: #ff4d6d;
-      margin-bottom: 15px;
-      font-size: 38px;
+      font-size: 32px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
     p {
-      font-size: 18px;
+      font-size: 16px;
       color: #555;
       line-height: 1.6;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .buttons {
       display: flex;
+      gap: 12px;
       justify-content: center;
-      gap: 15px;
     }
 
     button {
-      padding: 12px 28px;
+      flex: 1;
+      padding: 14px 0;
       font-size: 16px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: none;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.15s;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    button:active {
+      transform: scale(0.97);
     }
 
     .yes {
@@ -69,14 +69,14 @@
     }
 
     .no {
-      background-color: #e0e0e0;
-      color: #555;
+      background-color: #e6e6e6;
+      color: #444;
     }
 
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
       }
       to {
         opacity: 1;
@@ -107,7 +107,7 @@
       document.getElementById("card").innerHTML = `
         <h1>💗</h1>
         <p>
-          You have no idea how happy this makes me.
+          You don’t know how happy this makes me.
           <br><br>
           Thank you for saying yes.
         </p>
