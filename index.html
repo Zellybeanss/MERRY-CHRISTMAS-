@@ -211,14 +211,8 @@ giftBtn.addEventListener("click",()=>{
   giftClicked = true;
 
   const img = document.createElement("img");
-img.src = giftBtn.dataset.img;
-img.className = "collectedGift";
-
-// random tilt between -15deg and +15deg
-const angle = Math.random() * 30 - 15;
-img.dataset.angle = angle;
-img.style.transform = `rotate(${angle}deg)`;
-
+  img.src = giftBtn.dataset.img;
+  img.className = "collectedGift";
 
   const rect = giftBtn.getBoundingClientRect();
   img.style.left = rect.left+"px";
@@ -242,10 +236,8 @@ img.style.transform = `rotate(${angle}deg)`;
 
   setTimeout(()=>{
     collectedGifts.appendChild(img);
-img.style.position = "static";
-img.style.transform = `rotate(${img.dataset.angle}deg)`;
-     card.innerHTML = `
-</p>
+    img.style.position="static";
+    card.innerHTML = `<p>${giftBtn.dataset.after}</p>
                       <button class="next" onclick="showNext()">Next</button>`;
   },4000);
 });
@@ -265,4 +257,3 @@ attachNoBehavior();
 
 </body>
 </html>
-
